@@ -141,6 +141,8 @@ async function routeaccept(a) {
       } else { 
         return false;
       }
+    } else if (a[2]=='system') { 
+      
     } else {
       return false;
     }

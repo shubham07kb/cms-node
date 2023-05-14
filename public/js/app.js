@@ -198,10 +198,11 @@ async function metaCheck() {
     const response1 = await fetch("/api/meta/getMeta", {method: 'POST',headers: {'Content-Type': 'application/x-www-form-urlencoded'},body: formData.toString()}).then((r) => { return r.json() });
     const response2 = await fetch("https://ipwho.is/" + response1.ip + "?fields=ip,message,success,type,continent,continent_code,country,country_code,region,region_code,city,latitude,longitude,postal,calling_code,calling_code,capital,borders,flag,connection.isp,connection.domain,timezone").then((r) => { return r.json() });
     alldata = { userdata: response1.user_data, ipdata: response2 };
+    alldata = encodeURIComponent(JSON.stringify(alldata));
     setCookie('ip', response1.ip, 1);
-    setCookie('userdata', JSON.stringify(alldata), 1);
+    setCookie('userdata', alldata, 1);
     setls('ip', response1.ip);
-    setls('userdata', JSON.stringify(alldata));
+    setls('userdata', alldata);
   }
 }
 async function preSetup() { 
