@@ -24,7 +24,7 @@ async function route(req, res, env, port, path, http) {
         r = {}
         r['ip'] = req.headers['cf-connecting-ip'] || req.ip;
         r['user_data'] = src.deviceDetectorParse(req.headers['user-agent']);
-        if (req.body['ch-pf']!=undefined && req.body['ch-pfv']!=undefined && req.body['ch-pf'] != '' && req.body['ch-pfv'] != '') {
+        if (req.body['ch-pf'] != undefined && req.body['ch-pfv'] != undefined && req.body['ch-pf'] != '' && req.body['ch-pfv'] != '') {
           pfv = req.body['ch-pfv'].split('.');
           if (req.body['ch-pf'].toLowerCase() == 'windows') {
             if (pfv[0] == '13' || pfv[0] == '14') {
@@ -34,7 +34,7 @@ async function route(req, res, env, port, path, http) {
             } else {
               pfv = pfv[0];
             }
-          } else { 
+          } else {
             pfv = pfv[0];
           }
           r['user_data']['os']['fullname'] = req.body['ch-pf'] + ' ' + pfv;
@@ -48,15 +48,19 @@ async function route(req, res, env, port, path, http) {
     } else if (a[2] == 'page') {
       p = await getAccount(req.cookies, env, res);
       res.header("Content-Type", "application/json");
-      p=await src.pagemaker(req.body.page,src,env,p.userData);
+      p = await src.pagemaker(req.body.page, src, env, p.userData);
       res.send('m');
-    } else if (a[2] == 'security') { 
+    } else if (a[2] == 'security') {
       if (a[3] == 'getSecCode') {
         res.header("Content-Type", "application/json");
         p = {};
-        p1 = { sAlg:'AES', sSK:'1234567890', rAlg:'AES', rSK:'1234567890'};
+        p1 = { sAlg: 'AES', sSK: '1234567890', rAlg: 'AES', rSK: '1234567890' };
         p['secCode'] = JSON.stringify(p1);
         res.send(p);
+      }
+    } else if (a[2] == 'sys') { 
+      if (a[3] == 'cron') { 
+        src.cron(req, res, src, env);
       }
     }
   } else if (a[1] == 'pc') {
@@ -141,8 +145,12 @@ async function routeaccept(a) {
       } else { 
         return false;
       }
-    } else if (a[2]=='system') { 
-      
+    } else if (a[2]=='sys') { 
+      if (a[3] == 'cron') {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
@@ -150,3 +158,5 @@ async function routeaccept(a) {
     return false;
   }
 }
+//30 0-23/1 * * *
+//0 * * * *

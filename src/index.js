@@ -14,5 +14,6 @@ module.exports = {
     jsmaker: utils.jsmaker,
     pagemaker: utils.pagemaker,
     circularToJSON: utils.circularToJSON,
+    cron: require('./utils/cron').cron
 }
 
