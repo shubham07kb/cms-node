@@ -1,0 +1,41 @@
+{
+  "name": "db-api",
+  "version": "1.0.0",
+  "description": "Connect To Database without any more library and software, only for cloud hosted DB.",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app.js"
+  },
+  "keywords": [
+    "db",
+    "sql",
+    "mongodb",
+    "mongo",
+    "mongo",
+    "atlas",
+    "database"
+  ],
+  "author": "Shubham Kumar Bansal",
+  "license": "MIT",
+  "dependencies": {
+    "base64url": "^3.0.1",
+    "body-parser": "^1.20.2",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "device-detector-js": "^3.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mongodb": "^5.4.0",
+    "nodemailer": "^6.9.1",
+    "pg": "^8.10.0",
+    "uglify-js": "^3.17.4"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*"
+    ]
+  }
+}
