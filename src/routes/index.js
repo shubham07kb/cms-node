@@ -11,6 +11,9 @@ async function route(req, res, env, port, path, http) {
   } else if (a[1] == 'manifest.json') { 
     res.header("Content-Type", "application/json");
     res.send(src.fs.readFileSync(src.path.join(env.rp,'/public/json/manifest.json')));
+  } else if (a[1] == 'env') {
+    res.header("Content-Type", "application/json");
+    res.send(src.circularToJSON(env))
   } else if (a[1]=='api' && routeaccept(a)) {
     if (a[2] == 'account') {
       if (a[3] == 'getAccount') {
@@ -158,5 +161,4 @@ async function routeaccept(a) {
     return false;
   }
 }
-//30 0-23/1 * * *
-//0 * * * *
+
