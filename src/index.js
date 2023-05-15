@@ -1,6 +1,7 @@
 const db = require('./libs/db');
 const minify = require('./libs/minify');
 const utils = require('./utils');
+const func = require('./utils/functions');
 const DeviceDetector = require('device-detector-js');
 const deviceDetector = new DeviceDetector();
 module.exports = {
@@ -14,6 +15,8 @@ module.exports = {
     jsmaker: utils.jsmaker,
     pagemaker: utils.pagemaker,
     circularToJSON: utils.circularToJSON,
-    cron: require('./utils/cron').cron
+    cron: require('./utils/cron').cron,
+    str: func.str,
+    getDate: func.getDate,
 }
 
