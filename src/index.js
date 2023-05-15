@@ -14,8 +14,8 @@ module.exports = {
     minify: minify.minify,
     jsmaker: utils.jsmaker,
     pagemaker: utils.pagemaker,
-    circularToJSON: utils.circularToJSON,
     cron: require('./utils/cron').cron,
+    circularToJSON: func.circularToJSON,
     str: func.str,
     getDate: func.getDate,
 }

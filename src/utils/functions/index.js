@@ -19,7 +19,20 @@ function getDate(a=0) {
     cdate = { inNumber: { year: cdate.year, month: cdate.month, day: cdate.day, date: cdate.date, hour: cdate.hour, minute: cdate.minute, second: cdate.second, millisecond: cdate.millisecond }, inString: { year: str(cdate.year), month: str(cdate.month), day: str(cdate.day), date: str(cdate.date), hour: str(cdate.hour), minute: str(cdate.minute), second: str(cdate.second), millisecond: str(cdate.millisecond) }, inFixedString: { year: inFixedStr(cdate.year, 4), month: inFixedStr(cdate.month, 2), day: inFixedStr(cdate.day, 2), date: inFixedStr(cdate.date, 2), hour: inFixedStr(cdate.hour, 2), minute: inFixedStr(cdate.minute, 2), second: inFixedStr(cdate.second, 2), millisecond: inFixedStr(cdate.millisecond, 3) } };
     return cdate;
 }
+function circularToJSON(obj) {
+    const cache = new Set();
+    return JSON.stringify(obj, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (cache.has(value)) {
+                return '[Circular Reference]';
+            }
+            cache.add(value);
+        }
+        return value;
+    });
+}
 module.exports = {
     str: str,
-    getDate: getDate
+    getDate: getDate,
+    circularToJSON: circularToJSON
 }
