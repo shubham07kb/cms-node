@@ -157,6 +157,18 @@ async function seconDecryption() {
 
 
 //theme
+async function cssMaker(ccss = '', dcss = '', lcss = '') {
+  cl(getCookie('theme'));
+  if (getCookie('theme') == 'd') {
+    return ccss + dcss;
+  } else if (getCookie('theme') == 'l') {
+    return ccss + lcss;
+  } else if (getCookie('theme') == 's') {
+    return ccss + `@media(prefers-color-scheme: dark) { ` + dcss + ` } @media (prefers-color-scheme: light) { ` + lcss + ` }`;
+  } else { 
+    return ccss;
+  }
+}
 
 
 //account functions
@@ -183,10 +195,20 @@ async function accoutCheck() {
   const response = await fetch('/api/account/getAccount').then((r) => { return r.json() });
   if (response.logged == true) {
     glob_account.username = response.username;
+    p=await accoutPrefrence();
+  }
+  else {
+    p=await accoutPrefrence();
+  }
+}
+async function accoutPrefrence() { 
+  if (!checkCookie("theme") || !(getCookie('theme') != 'd' || getCookie('theme') != 'l' || getCookie('theme') != 's')) {
+    setCookie('theme', 'd', 1);
+    return 'd';
   }
 }
 async function cookieCheck() {
-
+  
 }
 async function metaCheck() {
   const response = await fetch("/api/meta/getIp").then((r) => { return r.json() });
@@ -206,6 +228,10 @@ async function metaCheck() {
   }
 }
 async function preSetup() { 
+  const styleElement = document.createElement('style');
+  styleElement.id = 'forContent';
+  document.head.appendChild(styleElement);
+  gebi('style').innerHTML = '';
   gebi('main').innerHTML = headhtml + `<div id="content"></div>` + foothtml;
 }
 
@@ -246,9 +272,15 @@ async function psi(a, b = sitename) {
 async function routeaccept(a) { 
   
 }
+async function skeletonScrren(){
+  gebi('content').innerHTML = skeletonhtml;
+  skeletonCSS = await cssMaker(skeletonccss, skeletondcss, skeletonlcss);
+  gebi('forContent').innerHTML = skeletonCSS;
+  cl(skeletonCSS);
+}
 async function loadPage() { 
+  skeletonScrren();
   ud = await loadUrlData();
-  ct(ud);
   const fixpages = ['about', 'contact', 'privacy', 'terms', 'help', 'faq', 'support', 'sitemap', 'Services', ''];
   if (ud.paarr[0] == "" || ud.paarr[0] == "home" || fixpages.includes(ud.paarr[0])) {
     if (ud.paarr[0] == "") {
@@ -274,4 +306,3 @@ async function app() {
   }
 }
 window.onload = function () { app(); }
-
