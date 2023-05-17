@@ -81,7 +81,7 @@ async function minify(e, rp, res, { html = 1, css = 1, js = 1 } = {}) {
                 const fileName = path.basename(element, path.extname(element));
                 const ques = fs.readFileSync(element, 'utf8');
                 const ans = await htmlminify.htmlminify(ques);
-                await fs.promises.writeFile(path.join(directoryPath, fileName + '.min.html'), ans);
+                fs.writeFileSync(path.join(directoryPath, fileName + '.min.html'), ans);
             } catch (error) {
                 console.error('Error minifying HTML:', error);
             }
@@ -92,7 +92,7 @@ async function minify(e, rp, res, { html = 1, css = 1, js = 1 } = {}) {
                 const fileName = path.basename(element, path.extname(element));
                 const ques = fs.readFileSync(element, 'utf8');
                 const ans = await cssminify.cssminify(ques);
-                await fs.promises.writeFile(path.join(directoryPath, fileName + '.min.css'), ans);
+                fs.writeFileSync(path.join(directoryPath, fileName + '.min.css'), ans);
             } catch (error) {
                 console.error('Error minifying CSS:', error);
             }
@@ -103,7 +103,7 @@ async function minify(e, rp, res, { html = 1, css = 1, js = 1 } = {}) {
                 const fileName = path.basename(element, path.extname(element));
                 const ques = fs.readFileSync(element, 'utf8');
                 const ans = await jsminify.jsminify(ques);
-                await fs.promises.writeFile(path.join(directoryPath, fileName + '.min.js'), ans);
+                fs.writeFileSync(path.join(directoryPath, fileName + '.min.js'), ans);
             } catch (error) {
                 console.error('Error minifying JavaScript:', error);
             }

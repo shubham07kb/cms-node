@@ -26,19 +26,31 @@ async function jsmaker(a, src, env) {
   }
   return resp;
 }
-async function pagemaker(a, src, env, ud) { 
-  if (a == 'home') {
-    htmlcode = src.fs.readFileSync(src.path.join(env.rp, '/public/html/home.min.html'));
-    csscode = src.fs.readFileSync(src.path.join(env.rp, '/public/css/home.min.css'));
-    jscode = src.fs.readFileSync(src.path.join(env.rp, '/public/js/home.min.js'));
-    return
+async function isInStatic(a) { 
+  staticPageArray = ['home', 'about', 'contact', 'privacy', 'terms', 'help', 'faq', 'support', 'sitemap', 'services'];
+  if (staticPageArray.includes(a)) { 
+    return true;
+  } else {
+    return false;
   }
-  htmlcode = '<h1>404</h1>';
-  csscode = 'h1{text-align:center;}';
-  jscode = '';
-  return 
+}
+async function pagemakerStatic(a, src, env, ud) { 
+  if (isInStatic(a)) {
+    htmlcode = encodeURIComponent(src.fs.readFileSync(src.path.join(env.rp, '/public/html/static/' + a + '.min.html'), 'utf8'));
+    csscode = encodeURIComponent(src.fs.readFileSync(src.path.join(env.rp, '/public/css/static/' + a + '.min.css'), 'utf8'));
+    jscode = encodeURIComponent(src.fs.readFileSync(src.path.join(env.rp, '/public/js/static/' + a + '.min.js'), 'utf8'));
+    p = { html: htmlcode, css: csscode, js: jscode };
+    return p;
+  } else {
+    htmlcode = '<h1>404</h1>';
+    csscode = 'h1{text-align:center;}';
+    jscode = '';
+    p = { html: encodeURIComponent(htmlcode), css: encodeURIComponent(csscode), js: encodeURIComponent(jscode) }
+    return p;
+  }
 }
 module.exports = {
   jsmaker: jsmaker,
-  pagemaker: pagemaker,
+  pagemakerStatic: pagemakerStatic,
+  isInStatic: isInStatic
 }

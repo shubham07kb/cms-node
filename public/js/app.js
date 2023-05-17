@@ -158,7 +158,6 @@ async function seconDecryption() {
 
 //theme
 async function cssMaker(ccss = '', dcss = '', lcss = '') {
-  cl(getCookie('theme'));
   if (getCookie('theme') == 'd') {
     return ccss + dcss;
   } else if (getCookie('theme') == 'l') {
@@ -260,9 +259,16 @@ async function loadUrlData() {
 }
 async function reqPageStat(a) { 
   xhr = new XMLHttpRequest();
-  xhr.open('GET', '/api/page/getPageStat', true);
+  xhr.open('GET', '/api/page/getPageStat/' + a, true);
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      res = JSON.parse(this.responseText);
+      gebi('content').innerHTML = decodeURIComponent(res.html);
+      gebi('forContent').innerHTML = decodeURIComponent(res.css);
+    }
+  }
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send('pagename=' + a);
+  xhr.send();
 }
 async function psi(a, b = sitename) {
   let stateObj = { id: "100" };
@@ -276,17 +282,17 @@ async function skeletonScrren(){
   gebi('content').innerHTML = skeletonhtml;
   skeletonCSS = await cssMaker(skeletonccss, skeletondcss, skeletonlcss);
   gebi('forContent').innerHTML = skeletonCSS;
-  cl(skeletonCSS);
 }
 async function loadPage() { 
   skeletonScrren();
   ud = await loadUrlData();
+  ct(ud);
   const fixpages = ['about', 'contact', 'privacy', 'terms', 'help', 'faq', 'support', 'sitemap', 'Services', ''];
-  if (ud.paarr[0] == "" || ud.paarr[0] == "home" || fixpages.includes(ud.paarr[0])) {
+  if (ud.paarr.length==1 && (ud.paarr[0] == "" || ud.paarr[0] == "home" || fixpages.includes(ud.paarr[0]))) {
     if (ud.paarr[0] == "") {
       ud.paarr[0]='home';
     }
-    reqPageStat();
+    reqPageStat(ud.paarr[0]);
   }
 } //encodeURIComponent
 
