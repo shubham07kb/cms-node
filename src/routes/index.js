@@ -52,10 +52,8 @@ async function route(req, res, env, port, path, http) {
       p = await getAccount(req.cookies, env, res);
       res.header("Content-Type", "application/json");
       if (a[3] == 'getPageStat') {
-        if (src.isInStatic(a[4])) {
-          p1 = await src.pagemakerStatic(a[4], src, env, p.userData);
-          res.send(p1);
-        }
+        p1 = await src.pagemakerStatic(a[4], src, env, p.userData);
+        res.send(p1);
       }
     } else if (a[2] == 'security') {
       if (a[3] == 'getSecCode') {
@@ -77,7 +75,7 @@ async function route(req, res, env, port, path, http) {
     src.minify(['/public/html', '/public/css', '/public/js'], env.rp, res);
   } else {
     res.header("Content-Type", "text/html");
-    res.render('index.min.html', { title: env.sn, about: env.sa, js: "app.min.js" });
+    res.render('index.min.html', { title: env.sn, about: env.sa, js: "app.js" });
   }
 }
 module.exports = {

@@ -9,7 +9,7 @@ class Account {
 
 //global variables
 glob_account = new Account();
-
+glob_js_off = '';
 
 //Base Functions
 function cl(a) {
@@ -260,11 +260,17 @@ async function loadUrlData() {
 async function reqPageStat(a) { 
   xhr = new XMLHttpRequest();
   xhr.open('GET', '/api/page/getPageStat/' + a, true);
-  xhr.onreadystatechange = function () {
+  xhr.onreadystatechange = async function () {
     if (this.readyState == 4 && this.status == 200) {
       res = JSON.parse(this.responseText);
+      gebi('head-title').innerHTML = decodeURIComponent(res.title) + ' - ' + sitename;
+      gebi('head-description').innerHTML = decodeURIComponent(res.description);
+      gebi('head-keywords').innerHTML = decodeURIComponent(res.keywords);
       gebi('content').innerHTML = decodeURIComponent(res.html);
+      css = await cssMaker(decodeURIComponent(res.css), decodeURIComponent(res.cssd), decodeURIComponent(res.cssl));
       gebi('forContent').innerHTML = decodeURIComponent(res.css);
+      eval(decodeURIComponent(res.json));
+      glob_js_off = decodeURIComponent(res.jsoff);
     }
   }
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
