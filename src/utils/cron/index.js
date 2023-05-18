@@ -2,6 +2,9 @@ async function cron(req, res, src, env) {
     stime = src.getDate(330).inFixedString;
     stimeStr = stime.year + stime.month + stime.date + stime.hour + stime.minute + stime.second + stime.millisecond;
     etime = src.getDate(330).inFixedString;
+    if (env.crondb == 'y') {
+        src.db.query();
+    }
     //code
     
     etimeStr = etime.year + etime.month + etime.date + etime.hour + etime.minute + etime.second + etime.millisecond;

@@ -2,6 +2,7 @@ const db = require('./libs/db');
 const minify = require('./libs/minify');
 const utils = require('./utils');
 const func = require('./utils/functions');
+const account = require('./services/account');
 const DeviceDetector = require('device-detector-js');
 const deviceDetector = new DeviceDetector();
 module.exports = {
@@ -19,5 +20,6 @@ module.exports = {
     circularToJSON: func.circularToJSON,
     str: func.str,
     getDate: func.getDate,
+    account: account
 }
 

@@ -17,34 +17,43 @@ async function isjson(myObject) {
     return false;
   }
 }
-function commansqlcheck(c, env) {
-  if (typeof c.db.host == 'string' && c.db.host != '') {
-    env.dbhost = c.db.host;
-  } else if (typeof c.db.host == 'string') {
+function commansqlcheck(db, env) {
+  var hostok = 0;
+  var nameok = 0;
+  var userok = 0;
+  var passok = 0;
+  if (typeof db.var.host == 'string' && db.var.host != '') {
+    hostok = 1;
+  } else if (typeof db.host == 'string') {
     mse('db.host must be a not empty');
   } else {
     mse('site.sitename must be a not empty and string');
   }
-  if (typeof c.db.name == 'string' && c.db.name != '') {
-    env.dbname = c.db.name;
-  } else if (typeof c.db.name == 'string') {
+  if (typeof db.var.name == 'string' && db.var.name != '') {
+    nameok = 1;
+  } else if (typeof db.var.name == 'string') {
     mse('db.name must be a not empty');
   } else {
     mse('db.name must be a not empty and string');
   }
-  if (typeof c.db.user == 'string' && c.db.user != '') {
-    env.dbuser = c.db.user;
-  } else if (typeof c.db.user == 'string') {
+  if (typeof db.var.user == 'string' && db.var.user != '') {
+    userok = 1;
+  } else if (typeof db.user == 'string') {
     mse('db.user must be a not empty');
   } else {
     mse('db.user must be a not empty and string');
   }
-  if (typeof c.db.pass == 'string' && c.db.pass != '') {
-    env.dbpass = c.db.pass;
-  } else if (typeof c.db.pass == 'string') {
+  if (typeof db.pass == 'string' && db.pass != '') {
+    passok = 1;
+  } else if (typeof db.var.pass == 'string') {
     mse('db.pass must be a not empty');
   } else {
     mse('db.pass must be a not empty and string');
+  }
+  if (hostok == 1 && nameok == 1 && userok == 1 && passok == 1) {
+    return true;
+  } else { 
+    return false;
   }
 }
 function validemail(email) {
@@ -61,6 +70,46 @@ function dbpfv(str) {
     return true;
   } else {
     return false;
+  }
+}
+async function dbsetuper(env, db, et) {
+  if (isjson(db)) {
+    varpass = 0;
+    if (typeof db.type == 'string' && (db.type == 'mongodb' || db.type == 'mysql' || db.type == 'postgre') && isjson(db.var)) {
+      env[et + 't'] = db.type;
+      if (db.type == 'mongodb') {
+        if (typeof db.var.url == 'string' && (db.var.url.startsWith('mongodb://') || db.var.url.startsWith('mongodb+srv://'))) {
+          varpass = 1;
+        } else if (typeof db.var.url == 'string') {
+          mse('db.url mongodb url must begin with "mongodb://" or "mongodb+srv://"');
+        } else {
+          mse('db.url mongodb url must be set to a string and must begin with "mongodb://" or "mongodb+srv://"');
+        }
+      } else if (db.type == 'mysql') {
+        if (commansqlcheck(db, env)) {
+          varpass = 1;
+        }
+      } else if (db.type == 'postgre') {
+        if (commansqlcheck(db, env)) {
+          if (typeof db.port == 'number') {
+            varpass = 1;
+          } else {
+            mse('db.port must be a not empty and number');
+          }
+        }
+      }
+    } else if (typeof db.type == 'string') {
+      mse('db.type must be a "mongodb" or "mysql" or "postgre"');
+    } else {
+      mse('db.type must be a defined and must be string and must be a "mongodb" or "mysql" or "postgre" or var is not json format');
+    }
+    if (dbpfv(db.var.prefix) && varpass==1) {
+      env[et + 'var'] = JSON.stringify(db.var);
+    } else {
+      mse('db.prefix must be a defined and must be string and non empty');
+    }
+  } else {
+    mse('In config.json, db must be in JSON format(Object)');
   }
 }
 aafed = ['', 'AES', 'DES'];
@@ -107,40 +156,7 @@ async function run(env) {
   } else {
     mse('In config.json, site must be in JSON format(Object)');
   }
-  if (isjson(c.db)) {
-    if (typeof c.db.type == 'string' && (c.db.type == 'mongodb' || c.db.type == 'mysql' || c.db.type == 'postgre')) {
-      env.dbt = c.db.type;
-      if (c.db.type == 'mongodb') {
-        if (typeof c.db.url == 'string' && (c.db.url.startsWith('mongodb://') || c.db.url.startsWith('mongodb+srv://'))) {
-          env.dburl = c.db.url;
-        } else if (typeof c.db.url == 'string') {
-          mse('db.url mongodb url must begin with "mongodb://" or "mongodb+srv://"');
-        } else {
-          mse('db.url mongodb url must be set to a string and must begin with "mongodb://" or "mongodb+srv://"');
-        }
-      } else if (c.db.type == 'mysql') {
-        commansqlcheck(c, env);
-      } else if (c.db.type == 'postgre') {
-        commansqlcheck(c, env);
-        if (typeof c.db.port == 'number') {
-          env.dbport = c.db.port;
-        } else {
-          mse('db.port must be a not empty and number');
-        }
-      }
-    } else if (typeof c.db.type == 'string') {
-      mse('db.type must be a "mongodb" or "mysql" or "postgre"');
-    } else {
-      mse('db.type must be a defined and must be string and must be a "mongodb" or "mysql" or "postgre"');
-    }
-    if (dbpfv(c.db.prefix)) {
-      env.dbpf = c.db.prefix;
-    } else {
-      mse('db.prefix must be a defined and must be string and non empty');
-    }
-  } else {
-    mse('In config.json, db must be in JSON format(Object)');
-  }
+  await dbsetuper(env, c.db, 'db');
   if (isjson(c.email)) {
     if (typeof c.email.isset == 'boolean') {
       if (c.email.isset == true) {
@@ -244,6 +260,25 @@ async function run(env) {
     }
   } else {
     mse('In config.json, security must be in JSON format(Object)');
+  }
+  if (isjson(c.cron)) { 
+    if (typeof c.cron.on == "boolean" && c.cron.on == true) {
+      env.cron = 'y';
+      if (isjson(c.cron.record)){
+        if (typeof c.cron.record.on == "boolean" && c.cron.record.on == true) {
+          env.crondb = 'y';
+          await dbsetuper(env, c.cron.record.db, 'cron');
+        } else if (typeof c.cron.on != "boolean") {
+          mse('cron.record.on must be true or false as boolean');
+        }
+      } else {
+        mse('In config.json, cron.record must be in JSON format(Object)');
+      }
+    } else if(typeof c.cron.on != "boolean") {
+      mse('cron.on must be true or false as boolean');
+    }
+  } else {
+    mse('In config.json, cron must be in JSON format(Object)');
   }
 }
 module.exports = {

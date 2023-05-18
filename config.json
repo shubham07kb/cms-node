@@ -8,8 +8,10 @@
   },
   "db": {
     "type": "mongodb",
-    "url": "mongodb+srv://Shubhamkb:Shubhamkb@cudatabase.jejqgjq.mongodb.net/?retryWrites=true&w=majority",
-    "prefix":"web_"
+    "var": {
+      "url": "mongodb+srv://shub:shub@webcms.gsvkyvd.mongodb.net/?retryWrites=true&w=majority",
+      "prefix":"web_"
+    }
   },
   "email": {
     "isset":true,
@@ -79,5 +81,18 @@
     "data_t_algo": "",
     "data_r_string": "",
     "data_r_algo": ""
+  },
+  "cron":{
+    "on":true,
+    "record":{
+      "on":true,
+      "db": {
+        "type": "mongodb",
+        "var":{
+          "url": "mongodb+srv://shub:shub@cron.tanfhwi.mongodb.net/?retryWrites=true&w=majority",
+          "prefix": "web_"
+        }
+      }
+    }
   }
 }

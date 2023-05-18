@@ -226,12 +226,21 @@ async function metaCheck() {
     setls('userdata', alldata);
   }
 }
+async function pluginLoader() { 
+  const response = '<div id="top-loading-line"></div>';
+  return response;
+}
 async function preSetup() { 
-  const styleElement = document.createElement('style');
-  styleElement.id = 'forContent';
-  document.head.appendChild(styleElement);
+  const styleElementFC = document.createElement('style');
+  styleElementFC.id = 'forContent';
+  document.head.appendChild(styleElementFC);
   gebi('style').innerHTML = '';
   gebi('main').innerHTML = headhtml + `<div id="content"></div>` + foothtml;
+  plugins=await pluginLoader();
+  gebi('plugins').innerHTML = plugins;
+  const styleElementPlugin = document.createElement('style');
+  styleElementPlugin.id = 'forContent';
+  document.head.appendChild(styleElementPlugin);
 }
 
 
@@ -259,21 +268,28 @@ async function loadUrlData() {
 }
 async function reqPageStat(a) { 
   xhr = new XMLHttpRequest();
+  gebi('top-loading-line').style.width = '30%';
   xhr.open('GET', '/api/page/getPageStat/' + a, true);
   xhr.onreadystatechange = async function () {
     if (this.readyState == 4 && this.status == 200) {
       res = JSON.parse(this.responseText);
+      gebi('top-loading-line').style.width = '60%';
       gebi('head-title').innerHTML = decodeURIComponent(res.title) + ' - ' + sitename;
-      gebi('head-description').innerHTML = decodeURIComponent(res.description);
-      gebi('head-keywords').innerHTML = decodeURIComponent(res.keywords);
+      gebi('head-description').content = decodeURIComponent(res.description);
+      gebi('head-keywords').content = decodeURIComponent(res.keywords);
+      gebi('top-loading-line').style.width = '75%';
       gebi('content').innerHTML = decodeURIComponent(res.html);
       css = await cssMaker(decodeURIComponent(res.css), decodeURIComponent(res.cssd), decodeURIComponent(res.cssl));
       gebi('forContent').innerHTML = decodeURIComponent(res.css);
+      gebi('top-loading-line').style.width = '90%';
       eval(decodeURIComponent(res.json));
+      gebi('top-loading-line').style.width = '100%';
       glob_js_off = decodeURIComponent(res.jsoff);
+      gebi('top-loading-line').style.width = '0%';
     }
   }
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  gebi('top-loading-line').style.width = '40%';
   xhr.send();
 }
 async function psi(a, b = sitename) {
@@ -293,11 +309,16 @@ async function loadPage() {
   skeletonScrren();
   ud = await loadUrlData();
   ct(ud);
+  gebi('top-loading-line').style.width = '5%';
+  eval();
+  gebi('top-loading-line').style.width = '10%';
   const fixpages = ['about', 'contact', 'privacy', 'terms', 'help', 'faq', 'support', 'sitemap', 'Services', ''];
+  const accountPages=['login','signin','register','signup','logout','forgot','reset','verify','profile','settings','account',''];
   if (ud.paarr.length==1 && (ud.paarr[0] == "" || ud.paarr[0] == "home" || fixpages.includes(ud.paarr[0]))) {
     if (ud.paarr[0] == "") {
       ud.paarr[0]='home';
     }
+    gebi('top-loading-line').style.width = '20%';
     reqPageStat(ud.paarr[0]);
   }
 } //encodeURIComponent
@@ -314,7 +335,7 @@ async function app() {
     await preSetup();
     await loadPage();
   } catch (err) {
-    alert('Error: ' + err.message);
+    alert('Error: ' + err);
   }
 }
 window.onload = function () { app(); }
