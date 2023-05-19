@@ -28,7 +28,8 @@
   "discussion": {
     "url": "https://github.com/shubham07kb/cms-node/discussions"
   },
-  "homepage": "https://shubham07kb.github.io/",
+  "homepage": "https://github.com/shubham07kb/cms-node#readme",
+  "run":"shubham07kb.github.io",
   "dependencies": {
     "base64url": "^3.0.1",
     "body-parser": "^1.20.2",

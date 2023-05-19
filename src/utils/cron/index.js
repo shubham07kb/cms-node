@@ -3,22 +3,29 @@ async function cron(req, res, src, env) {
     stime = src.getDate(0).inFixedString;
     stimeStr = stime.year + stime.month + stime.date + stime.hour + stime.minute + stime.second + stime.millisecond;
     if (env.crondb == 'y') {
-        await src.db.insertOne(env.crondbt, JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr });
+        await src.db.insertOne(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr });
     }
 
     //code
-    dbarray = { 'WebCMS': dbvar };
+    dbarray = { "WebCMS": "dbvar" };
+    dbWorkings = [];
+    dbNotWorkings = [];
     for (let key in dbarray) {
-        await src.db.query(dbarray[key].dbtype, dbarray[key], dbarray[key].prefix + 'cron', { status: 'y' });
+        p = await src.db.query(JSON.parse(env[dbarray[key]]), JSON.parse(env[dbarray[key]]).prefix + 'cron', { for: "status" });
+        if (p.length==1 && p[0].dbname == key) {
+            dbWorkings.push(key);
+        } else { 
+            dbNotWorkings.push(key);
+        }
     }
 
     //end code
     etime = src.getDate(0).inFixedString;
     etimeStr = etime.year + etime.month + etime.date + etime.hour + etime.minute + etime.second + etime.millisecond;
     res.header('Content-Type', 'application/json');
-    resp = { status: 'success', status_code: 1, status_message: 'Cron Job Done', status_message_code: '634', status_message_code_message: 'Cron_Job_Done', start_time: stimeStr, end_time: etimeStr };
+    resp = { status: 'success', status_code: 1, status_message: 'Cron Job Done', status_message_code: '634', status_message_code_message: 'Cron_Job_Done', start_time: stimeStr, end_time: etimeStr, notes: { dbWorkings: dbWorkings, dbNotWorkings: dbNotWorkings } };
     if (env.crondb == 'y') {
-        await src.db.update(env.crondbt, JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr } });
+        await src.db.update(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr, notes: resp.notes } });
     }
     res.send(resp);
 }

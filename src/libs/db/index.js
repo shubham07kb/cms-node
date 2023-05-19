@@ -1,45 +1,42 @@
 const mongo = require('./mongo');
 const mysql = require('./mysql');
 const postgre = require('./postgre');
-async function insertOne(dbtype, dbvar, tablename, data) { 
-    if (dbtype == 'mongodb') {
-        console.log('ok');
+async function insertOne(dbvar, tablename, data) { 
+    if (dbvar.type == 'mongodb') {
         res=await mongo.insertOne(dbvar.url, dbvar.dbname, tablename, data);
-    } else if (dbtype == 'mysql') {
+    } else if (dbvar.type == 'mysql') {
         res=await mysql.insertOne(env);
-    } else if (dbtype == 'postgre') {
+    } else if (dbvar.type == 'postgre') {
         res=await postgre.insertOne(env);
     }
-    console.log(res);
     return res;
 }
-async function update(dbtype, dbvar, tablename, predata, data) { 
-    if (dbtype == 'mongodb') {
+async function update(dbvar, tablename, predata, data) { 
+    if (dbvar.type == 'mongodb') {
         res=await mongo.update(dbvar.url, dbvar.dbname, tablename, predata, data);
-    } else if (dbtype == 'mysql') {
+    } else if (dbvar.type == 'mysql') {
         res=await mysql.update(env);
-    } else if (dbtype == 'postgre') {
+    } else if (dbvar.type == 'postgre') {
         res=await postgre.update(env);
     }
-    console.log(res);
     return res;
 }
-async function del(dbtype, db, env) { 
-    if (dbtype == 'mongo') {
+async function del(db, env) { 
+    if (dbvar.type == 'mongodb') {
         res=await mongo.del(env);
-    } else if (dbtype == 'mysql') {
+    } else if (dbvar.type == 'mysql') {
         res=await mysql.del(env);
-    } else if (dbtype == 'postgre') {
+    } else if (dbvar.type == 'postgre') {
         res=await postgre.del(env);
     }
     return res;
 }
-async function query(dbtype, dbvar, tablename) { 
-    if (dbtype == 'mongo') {
+async function query(dbvar, tablename, data) { 
+    if (dbvar.type == 'mongodb') {
         res = await mongo.query(dbvar.url, dbvar.dbname, tablename, data, e={});
-    } else if (dbtype == 'mysql') {
+    } else if (dbvar.type == 'mysql') {
         res=await mysql.query(env);
-    } else if (dbtype == 'postgre') {
+    } else if (dbvar.type == 'postgre') {
         res=await postgre.query(env);
     }
     return res;

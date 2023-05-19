@@ -86,7 +86,6 @@ async function dbsetuper(env, db, et) {
   if (isjson(db)) {
     varpass = 0;
     if (typeof db.type == 'string' && (db.type == 'mongodb' || db.type == 'mysql' || db.type == 'postgre') && isjson(db.var)) {
-      env[et + 't'] = db.type;
       if (db.type == 'mongodb') {
         if (typeof db.var.url == 'string' && (db.var.url.startsWith('mongodb://') || db.var.url.startsWith('mongodb+srv://'))) {
           if (typeof db.var.dbname == "string" && alphanumeric(db.var.dbname)) {
@@ -117,7 +116,8 @@ async function dbsetuper(env, db, et) {
     } else {
       mse('db.type must be a defined and must be string and must be a "mongodb" or "mysql" or "postgre" or var is not json format');
     }
-    if ((db.var.prefix.length==0 || dbpfv(db.var.prefix)) && varpass==1) {
+    if ((db.var.prefix.length == 0 || dbpfv(db.var.prefix)) && varpass == 1) {
+      db.var.type = db.type;
       env[et + 'var'] = JSON.stringify(db.var);
     } else {
       mse('db.prefix must be a defined as string and about all data of db must be correct');

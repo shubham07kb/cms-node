@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-async function query(mongourl, dbname, colname, data, e={}) {
+async function query(mongourl, dbname, colname, data, e = {}) {
   var db = await MongoClient.connect(mongourl);
   var dbo = await db.db(dbname);
   var r = await dbo.collection(colname).find(data, e).toArray();
@@ -7,8 +7,6 @@ async function query(mongourl, dbname, colname, data, e={}) {
   return r;
 }
 async function update(mongourl, dbname, colname, predata, data) {
-  console.log('ok inside');
-  console.log(mongourl, dbname, colname, predata, data);
   var db = await MongoClient.connect(mongourl);
   var dbo = await db.db(dbname);
   try {
@@ -23,8 +21,6 @@ async function del() {
 
 }
 async function insertOne(mongourl, dbname, colname, data) {
-  console.log('ok inside');
-  console.log(mongourl, dbname, colname, data);
   var db = await MongoClient.connect(mongourl);
   var dbo = await db.db(dbname);
   try {
