@@ -25,7 +25,7 @@ async function route(req, res, env, port, path, http) {
       res.header("Content-Type", "application/json");
       if (a[3] == 'getMeta') {
         r = {}
-        r['ip'] = req.headers['cf-connecting-ip'] || req.ip;
+        r['ip'] = src.getIP(req);
         r['user_data'] = src.deviceDetectorParse(req.headers['user-agent']);
         if (req.body['ch-pf'] != undefined && req.body['ch-pfv'] != undefined && req.body['ch-pf'] != '' && req.body['ch-pfv'] != '') {
           pfv = req.body['ch-pfv'].split('.');

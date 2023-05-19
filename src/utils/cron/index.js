@@ -5,7 +5,8 @@ async function cron(req, res, src, env) {
     if (env.crondb == 'y') {
         await src.db.insertOne(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr });
     }
-
+    fromua = await src.fetch('https://stack.cyclic.app/api/meta/getMeta').then((r) => { return r.json() });
+    console.log(from);
     //code
     dbarray = { "WebCMS": "dbvar" };
     dbWorkings = [];
@@ -18,14 +19,13 @@ async function cron(req, res, src, env) {
             dbNotWorkings.push(key);
         }
     }
-
     //end code
     etime = src.getDate(0).inFixedString;
     etimeStr = etime.year + etime.month + etime.date + etime.hour + etime.minute + etime.second + etime.millisecond;
     res.header('Content-Type', 'application/json');
-    resp = { status: 'success', status_code: 1, status_message: 'Cron Job Done', status_message_code: '634', status_message_code_message: 'Cron_Job_Done', start_time: stimeStr, end_time: etimeStr, fromIP: src.getIP(req), notes: { dbWorkings: dbWorkings, dbNotWorkings: dbNotWorkings } };
+    resp = { status: 'success', status_code: 1, status_message: 'Cron Job Done', status_message_code: '634', status_message_code_message: 'Cron_Job_Done', start_time: stimeStr, end_time: etimeStr, fromIP: src.getIP(req), user_agent: fromua, notes: { dbWorkings: dbWorkings, dbNotWorkings: dbNotWorkings } };
     if (env.crondb == 'y') {
-        await src.db.update(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr, fromIP: src.getIP(req), notes: resp.notes } });
+        await src.db.update(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr, fromIP: src.getIP(req), user_agent: fromua, notes: resp.notes } });
     }
     res.send(resp);
 }
