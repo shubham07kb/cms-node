@@ -6,7 +6,6 @@ async function cron(req, res, src, env) {
         await src.db.insertOne(JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr });
     }
     fromua = await src.fetch('https://stack.cyclic.app/api/meta/getMeta').then((r) => { return r.json() });
-    console.log(from);
     //code
     dbarray = { "WebCMS": "dbvar" };
     dbWorkings = [];
