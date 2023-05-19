@@ -1,6 +1,10 @@
 var MongoClient = require('mongodb').MongoClient;
-async function query() {
-
+async function query(mongourl, dbname, colname, data, e={}) {
+  var db = await MongoClient.connect(mongourl);
+  var dbo = await db.db(dbname);
+  var r = await dbo.collection(colname).find(data, e).toArray();
+  db.close();
+  return r;
 }
 async function update(mongourl, dbname, colname, predata, data) {
   console.log('ok inside');
@@ -15,7 +19,6 @@ async function update(mongourl, dbname, colname, predata, data) {
     return { status: 'error', statcode: 0, message: e };
   }
 }
-
 async function del() {
 
 }

@@ -7,7 +7,10 @@ async function cron(req, res, src, env) {
     }
 
     //code
-    
+    dbarray = { 'WebCMS': dbvar };
+    for (let key in dbarray) {
+        await src.db.query(dbarray[key].dbtype, dbarray[key], dbarray[key].prefix + 'cron', { status: 'y' });
+    }
 
     //end code
     etime = src.getDate(0).inFixedString;

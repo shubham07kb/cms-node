@@ -15,8 +15,20 @@
     "atlas",
     "database"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shubham07kb/cms-node"
+  },
   "author": "Shubham Kumar Bansal",
+  "email": "kumarbansal.shubham07@gmail.com",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shubham07kb/cms-node/issues"
+  },
+  "discussion": {
+    "url": "https://github.com/shubham07kb/cms-node/discussions"
+  },
+  "homepage": "https://shubham07kb.github.io/",
   "dependencies": {
     "base64url": "^3.0.1",
     "body-parser": "^1.20.2",
@@ -28,17 +40,23 @@
     "device-detector-js": "^3.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "isomorphic-fetch": "^3.0.0",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.4.0",
     "mysql2": "^3.3.1",
-    "node-fetch": "^3.3.1",
     "nodemailer": "^6.9.1",
     "pg": "^8.10.0",
     "uglify-js": "^3.17.4"
+  },
+  "config": {
+    "directory": "./config.json"
   },
   "nodemonConfig": {
     "ignore": [
       "public/*"
     ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

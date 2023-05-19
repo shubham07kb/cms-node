@@ -1,3 +1,4 @@
+const fetch = require('isomorphic-fetch');
 const db = require('./libs/db');
 const minify = require('./libs/minify');
 const utils = require('./utils');
@@ -11,6 +12,7 @@ module.exports = {
     base64url: require('base64url'),
     crypto: require('crypto'),
     jwt: require('jsonwebtoken'),
+    fetch: fetch,
     deviceDetectorParse: deviceDetector.parse,
     minify: minify.minify,
     jsmaker: utils.jsmaker,
