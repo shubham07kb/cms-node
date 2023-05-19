@@ -45,7 +45,7 @@ async function route(req, res, env, port, path, http) {
         res.send(r);
       } else if (a[3] == 'getIp') {
         r = {}
-        r['ip'] = req.headers['cf-connecting-ip'] || req.ip;
+        r['ip'] = src.getIP(req);
         res.send(r);
       }
     } else if (a[2] == 'page') {

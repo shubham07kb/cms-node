@@ -19,6 +19,7 @@ module.exports = {
     pagemakerStatic: utils.pagemakerStatic,
     isInStatic: utils.isInStatic,
     cron: require('./utils/cron').cron,
+    getIP: (req) => {return req.headers['cf-connecting-ip'] || req.ip },
     circularToJSON: func.circularToJSON,
     str: func.str,
     getDate: func.getDate,
