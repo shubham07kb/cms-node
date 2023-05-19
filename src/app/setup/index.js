@@ -72,6 +72,16 @@ function dbpfv(str) {
     return false;
   }
 }
+function alphanumeric(str) { 
+  const regex = /^[a-zA-Z0-9]+$/;
+  if (str.length == 0) {
+    return false;
+  } else if (regex.test(str)) { 
+    return true;
+  } else {
+    return false;
+  }
+}
 async function dbsetuper(env, db, et) {
   if (isjson(db)) {
     varpass = 0;
@@ -79,7 +89,11 @@ async function dbsetuper(env, db, et) {
       env[et + 't'] = db.type;
       if (db.type == 'mongodb') {
         if (typeof db.var.url == 'string' && (db.var.url.startsWith('mongodb://') || db.var.url.startsWith('mongodb+srv://'))) {
-          varpass = 1;
+          if (typeof db.var.dbname == "string" && alphanumeric(db.var.dbname)) {
+            varpass = 1;
+          } else{ 
+            mse('db.dbname must be a not empty and string and must be a valid mongodb database name');
+          }
         } else if (typeof db.var.url == 'string') {
           mse('db.url mongodb url must begin with "mongodb://" or "mongodb+srv://"');
         } else {
@@ -103,10 +117,10 @@ async function dbsetuper(env, db, et) {
     } else {
       mse('db.type must be a defined and must be string and must be a "mongodb" or "mysql" or "postgre" or var is not json format');
     }
-    if (dbpfv(db.var.prefix) && varpass==1) {
+    if ((db.var.prefix.length==0 || dbpfv(db.var.prefix)) && varpass==1) {
       env[et + 'var'] = JSON.stringify(db.var);
     } else {
-      mse('db.prefix must be a defined and must be string and non empty');
+      mse('db.prefix must be a defined as string and about all data of db must be correct');
     }
   } else {
     mse('In config.json, db must be in JSON format(Object)');
@@ -267,7 +281,7 @@ async function run(env) {
       if (isjson(c.cron.record)){
         if (typeof c.cron.record.on == "boolean" && c.cron.record.on == true) {
           env.crondb = 'y';
-          await dbsetuper(env, c.cron.record.db, 'cron');
+          await dbsetuper(env, c.cron.record.db, 'crondb');
         } else if (typeof c.cron.on != "boolean") {
           mse('cron.record.on must be true or false as boolean');
         }

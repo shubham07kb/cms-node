@@ -20,6 +20,7 @@ module.exports = {
     circularToJSON: func.circularToJSON,
     str: func.str,
     getDate: func.getDate,
-    account: account
+    account: account,
+    db: db
 }
 

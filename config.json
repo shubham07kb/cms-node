@@ -10,6 +10,7 @@
     "type": "mongodb",
     "var": {
       "url": "mongodb+srv://shub:shub@webcms.gsvkyvd.mongodb.net/?retryWrites=true&w=majority",
+      "dbname":"WebCMS",
       "prefix":"web_"
     }
   },
@@ -90,6 +91,7 @@
         "type": "mongodb",
         "var":{
           "url": "mongodb+srv://shub:shub@cron.tanfhwi.mongodb.net/?retryWrites=true&w=majority",
+          "dbname": "Cron",
           "prefix": "web_"
         }
       }

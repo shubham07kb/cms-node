@@ -1,45 +1,52 @@
 const mongo = require('./mongo');
 const mysql = require('./mysql');
 const postgre = require('./postgre');
-async function dbinsert(db, env) { 
-    if (db == 'mongodb') {
-        await mongo.insert(env);
-    } else if (db == 'mysql') {
-        await mysql.insert(env);
-    } else if (db == 'postgre') {
-        await postgre.insert(env);
+async function insertOne(dbtype, dbvar, tablename, data) { 
+    if (dbtype == 'mongodb') {
+        console.log('ok');
+        res=await mongo.insertOne(dbvar.url, dbvar.dbname, tablename, data);
+    } else if (dbtype == 'mysql') {
+        res=await mysql.insertOne(env);
+    } else if (dbtype == 'postgre') {
+        res=await postgre.insertOne(env);
     }
+    console.log(res);
+    return res;
 }
-async function dbupdate(db, env) { 
-    if (db == 'mongodb') {
-        await mongo.update(env);
-    } else if (db == 'mysql') {
-        await mysql.update(env);
-    } else if (db == 'postgre') {
-        await postgre.update(env);
+async function update(dbtype, dbvar, tablename, predata, data) { 
+    if (dbtype == 'mongodb') {
+        res=await mongo.update(dbvar.url, dbvar.dbname, tablename, predata, data);
+    } else if (dbtype == 'mysql') {
+        res=await mysql.update(env);
+    } else if (dbtype == 'postgre') {
+        res=await postgre.update(env);
     }
+    console.log(res);
+    return res;
 }
-async function dbdelete(db, env) { 
-    if (db == 'mongo') {
-        await mongo.del(env);
-    } else if (db == 'mysql') {
-        await mysql.del(env);
-    } else if (db == 'postgre') {
-        await postgre.del(env);
+async function del(dbtype, db, env) { 
+    if (dbtype == 'mongo') {
+        res=await mongo.del(env);
+    } else if (dbtype == 'mysql') {
+        res=await mysql.del(env);
+    } else if (dbtype == 'postgre') {
+        res=await postgre.del(env);
     }
+    return res;
 }
-async function dbquery(db, env) { 
-    if (db == 'mongo') {
-        await mongo.query(env);
-    } else if (db == 'mysql') {
-        await mysql.query(env);
-    } else if (db == 'postgre') {
-        await postgre.query(env);
+async function query(dbtype, db, env) { 
+    if (dbtype == 'mongo') {
+        res=await mongo.query(env);
+    } else if (dbtype == 'mysql') {
+        res=await mysql.query(env);
+    } else if (dbtype == 'postgre') {
+        res=await postgre.query(env);
     }
+    return res;
 }
 module.exports = {
-    dbinsert: dbinsert,
-    dbupdate: dbupdate,
-    dbdelete: dbdelete,
-    dbquery: dbquery
+    insertOne: insertOne,
+    update: update,
+    del: del,
+    query: query
 }

@@ -2,25 +2,41 @@ var MongoClient = require('mongodb').MongoClient;
 async function query() {
 
 }
-async function update() {
-  var db = await MongoClient.connect(d);
-  var dbo = await db.db(e);
+async function update(mongourl, dbname, colname, predata, data) {
+  console.log('ok inside');
+  console.log(mongourl, dbname, colname, predata, data);
+  var db = await MongoClient.connect(mongourl);
+  var dbo = await db.db(dbname);
   try {
-    var r = await dbo.collection(a).updateOne(c, b);
+    var r = await dbo.collection(colname).updateMany(predata, data);
     db.close();
     return { status: 'success', statcode: 1, message: r };
   } catch (e) {
     return { status: 'error', statcode: 0, message: e };
   }
 }
+
 async function del() {
 
 }
-async function insert() {
-  var db = await MongoClient.connect(c);
-  var dbo = await db.db(d);
+async function insertOne(mongourl, dbname, colname, data) {
+  console.log('ok inside');
+  console.log(mongourl, dbname, colname, data);
+  var db = await MongoClient.connect(mongourl);
+  var dbo = await db.db(dbname);
   try {
-    var r = await dbo.collection(a).insertOne(b);
+    var r = await dbo.collection(colname).insertOne(data);
+    db.close();
+    return { status: 'success', statcode: 1, message: r };
+  } catch (e) {
+    return { status: 'error', statcode: 0, message: e };
+  }
+}
+async function insert(mongourl, dbname, colname, data) {
+  var db = await MongoClient.connect(mongourl);
+  var dbo = await db.db(dbname);
+  try {
+    var r = await dbo.collection(colname).insertMany(data);
     db.close();
     return { status: 'success', statcode: 1, message: r };
   } catch (e) {
@@ -31,5 +47,6 @@ module.exports = {
   query: query,
   update: update,
   del: del,
-  insert: insert
+  insert: insert,
+  insertOne: insertOne
 }

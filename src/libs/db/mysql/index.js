@@ -11,9 +11,13 @@ async function del() {
 async function insert() {
 
 }
+async function insertOne() {
+
+}
 module.exports = {
     query: query,
     update: update,
     del: del,
-    insert: insert
+    insert: insert,
+    insertOne: insertOne
 }
