@@ -10,7 +10,9 @@ async function cron(req, res, src, env) {
     etimeStr = etime.year + etime.month + etime.date + etime.hour + etime.minute + etime.second + etime.millisecond;
     res.header('Content-Type', 'application/json');
     resp = { status: 'success', status_code: 1, status_message: 'Cron Job Done', status_message_code: '634', status_message_code_message: 'Cron_Job_Done', start_time: stimeStr, end_time: etimeStr };
-    src.db.update(env.crondbt, JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr } });
+    if (env.crondb == 'y') {
+        await src.db.update(env.crondbt, JSON.parse(env.crondbvar), JSON.parse(env.crondbvar).prefix + 'record', { start_time: stimeStr }, { $set: { end_time: etimeStr } });
+    }
     res.send(resp);
 }
 //30 0-23/1 * * *
