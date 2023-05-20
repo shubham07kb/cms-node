@@ -8,13 +8,14 @@ async function route(req, res, env, port, path, http, src) {
   } else if (a[1] == 'bctd') {
     res.redirect('/public/others/bc.pdf');
   } else if (a[1] == 'bc1') {
+    res.header('Content-Type', 'text/html');
     res.send(`
-import hashlib  #Shubham Kumar Bansal 19BCS4318
-st="blockchain"
-resultsha=hashlib.sha256(st.encode())
-resultmd=hashlib.md5(st.encode())
-print("SHA256 of 'blockchain' is "+str(resultsha.hexdigest()))
-print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))
+import hashlib  #Shubham Kumar Bansal 19BCS4318 <br>
+st="blockchain"<br>
+resultsha=hashlib.sha256(st.encode())<br>
+resultmd=hashlib.md5(st.encode())<br>
+print("SHA256 of 'blockchain' is "+str(resultsha.hexdigest()))<br>
+print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))<br>
 `);
   } else if (a[1] == 'js') {
     res.header("Content-Type", "application/javascript");
