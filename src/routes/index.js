@@ -1,9 +1,21 @@
-const src = require('../../src');
-async function route(req, res, env, port, path, http) {
+async function route(req, res, env, port, path, http, src) {
   a = req.params[0].split('/');
   if (a[1] == 'favicon.ico') {
     res.header('Content-Type', 'image/ico');
     res.send(src.fs.readFileSync(src.path.join(env.rp,'/public/images/icons/favicon.ico')));
+  } else if (a[1] == 'bcd') {
+    res.redirect('https://blockchaindemo.io/');
+  } else if (a[1] == 'bctd') {
+    res.redirect('/public/others/bc.pdf');
+  } else if (a[1] == 'bc1') {
+    res.send(`
+import hashlib  #Shubham Kumar Bansal 19BCS4318
+st="blockchain"
+resultsha=hashlib.sha256(st.encode())
+resultmd=hashlib.md5(st.encode())
+print("SHA256 of 'blockchain' is "+str(resultsha.hexdigest()))
+print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))
+`);
   } else if (a[1] == 'js') {
     res.header("Content-Type", "application/javascript");
     resp = await src.jsmaker(a[2],src,env);

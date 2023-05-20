@@ -18,7 +18,7 @@ async function update(mongourl, dbname, colname, predata, data) {
   }
 }
 async function del() {
-
+    
 }
 async function insertOne(mongourl, dbname, colname, data) {
   var db = await MongoClient.connect(mongourl);
