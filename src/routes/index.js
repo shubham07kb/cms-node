@@ -3,20 +3,6 @@ async function route(req, res, env, port, path, http, src) {
   if (a[1] == 'favicon.ico') {
     res.header('Content-Type', 'image/ico');
     res.send(src.fs.readFileSync(src.path.join(env.rp,'/public/images/icons/favicon.ico')));
-  } else if (a[1] == 'bcd') {
-    res.redirect('https://blockchaindemo.io/');
-  } else if (a[1] == 'bctd') {
-    res.redirect('/public/others/bc.pdf');
-  } else if (a[1] == 'bc1') {
-    res.header('Content-Type', 'text/html');
-    res.send(`
-import hashlib  #Shubham Kumar Bansal 19BCS4318 <br>
-st="blockchain"<br>
-resultsha=hashlib.sha256(st.encode())<br>
-resultmd=hashlib.md5(st.encode())<br>
-print("SHA256 of 'blockchain' is "+str(resultsha.hexdigest()))<br>
-print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))<br>
-`);
   } else if (a[1] == 'js') {
     res.header("Content-Type", "application/javascript");
     resp = await src.jsmaker(a[2],src,env);
@@ -27,7 +13,19 @@ print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))<br>
   } else if (a[1] == 'env') {
     res.header("Content-Type", "application/json");
     res.send(src.circularToJSON(env))
-  } else if (a[1] == 'api' && routeAcceptApi(a)) {
+  } else if (a[1] == 'proxy' && routeAccept(a)) {
+    if (a[2] == 'img') {
+      if (a.length > 3) {
+        src.proxy.img(a, req, res, env, src);
+      } else {
+        res.header("Content-Type", "application/json");
+        res.send('{status: 404, message: "Not Found", path: "Give Image Path"}');
+      }
+    } else {
+      res.header("Content-Type", "application/json");
+      res.send('{status: 404, message: "Not Found"}');
+    }
+  } else if (a[1] == 'api' && routeAccept(a)) {
     if (a[2] == 'account') {
       if (a[3] == 'getAccount') {
         p = await src.account.getAccount(req.cookies, env, res);
@@ -80,12 +78,16 @@ print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))<br>
       if (a[3] == 'cron') { 
         src.cron(req, res, src, env);
       }
+    } else {
+      res.header("Content-Type", "application/json");
+      res.send('{status: 404, message: "Not Found"}');
     }
   } else if (a[1] == 'pc') {
     res.header("Content-Type", "application/json");
     res.send(src.circularToJSON(env));
   } else if (a[1] == 'minify') { 
-    src.minify(['/public/html', '/public/css', '/public/js'], env.rp, res);
+    resp = await src.minify(['/public/html', '/public/css', '/public/js'], env.rp);
+    res.send(resp);
   } else {
     if (a[1] == 'dashboard') {
       res.header("Content-Type", "text/html");
@@ -99,7 +101,7 @@ print("MD5 of 'blockchain' is "+str(resultmd.hexdigest()))<br>
 module.exports = {
   route: route
 }
-async function routeAcceptApi(a) {
+async function routeAccept(a) {
   if (a[1] == 'api') {
     if (a[2] == 'account') {
       if (a[3] == 'getAccount') {
@@ -133,6 +135,12 @@ async function routeAcceptApi(a) {
       } else {
         return false;
       }
+    } else {
+      return false;
+    }
+  } else if (a[1] == 'proxy') {
+    if (a[2] == 'img') {
+      return true;
     } else {
       return false;
     }

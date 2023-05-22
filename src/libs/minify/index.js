@@ -33,7 +33,7 @@ function isarray(myObject) {
         return false;
     }
 }
-async function minify(e, rp, res, { html = 1, css = 1, js = 1 } = {}) {
+async function minify(e, rp, { html = 1, css = 1, js = 1 } = {}) {
     try {
         let d = [];
         let erra = [];
@@ -108,10 +108,10 @@ async function minify(e, rp, res, { html = 1, css = 1, js = 1 } = {}) {
                 console.error('Error minifying JavaScript:', error);
             }
         }
-        res.send('{}');
+        return '{}';
     } catch (error) {
         console.error('Error minifying files:', error);
-        res.send('{}');
+        return '{}';
     }
 }
 module.exports = {
